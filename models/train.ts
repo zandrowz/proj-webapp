@@ -9,7 +9,7 @@ const trains = {
 
         return result.data;
     },
-    getDelays: async function getdelays() {
+    getDelays: async function getDelays() {
         const response = await fetch(`${config.base_url}/delayed`);
         const result = await response.json();
 

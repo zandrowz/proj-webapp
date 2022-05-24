@@ -11,28 +11,39 @@ import { Ionicons } from '@expo/vector-icons';
 
 import Home from "./components/Home";
 import Delays from "./components/Delays";
+import Stations from "./components/StationsList";
+import About from "./components/About";
 
 import trainModel from "./models/train";
+import {LogBox} from "react-native";
+
+LogBox.ignoreLogs([
+"exported from 'deprecated-react-native-prop-types'.",
+])
 
 const Tab = createBottomTabNavigator();
 const routeIcons = {
-    "Home": "home",
-    "Delays": "train",
+    "Hem": "home",
+    "Trafikinfo": "train",
+    "Karta": "map",
+    "Om": "information-circle",
 };
 
 export default function App() {
     const [stations, setStations] = useState([]);
     const [delays, setDelays] = useState([]);
 
-    const getStationFunction = async () => {
-        setStations(await trainModel.getStations());
-        setDelays(await trainModel.getDelays());
-    }
-    
-    useEffect(() => {
-        getStationFunction();
-      })
+    // const getStationFunction = async () => {
+    //     setStations(await trainModel.getStations());
+    //     setDelays(await trainModel.getDelays());
+    // }
 
+    useEffect(() => {
+        (async () => {
+            setStations(await trainModel.getStations());
+            setDelays(await trainModel.getDelays());
+        })();
+    }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,17 +55,28 @@ export default function App() {
 
             return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: '#DF406A',
+            tabBarActiveTintColor: 'black',
             tabBarInactiveTintColor: 'gray',
             headerShown: false
         })}
         >
-          <Tab.Screen name="Home">
+          {/* <Tab.Screen name="Home">
             {() => <Home stations={stations} delays={delays} />}
+            </Tab.Screen> */}
+            <Tab.Screen name="Hem" component={Home} />
+            {/* <Tab.Screen name="Hem">
+                {(screenProps) => <Home
+                    {...screenProps}
+                    delays={delays}
+                    stations={stations}/>}
+            </Tab.Screen> */}
+            <Tab.Screen name="Trafikinfo">
+                {() => <Stations stations={stations} delays={delays} />}
             </Tab.Screen>
-            <Tab.Screen name="Delays">
+            <Tab.Screen name="Karta">
             {() => <Delays stations={stations} delays={delays} />}
             </Tab.Screen>
+            <Tab.Screen name="Om" component={About} />
         </Tab.Navigator>
       </NavigationContainer>
       <StatusBar style="auto" />
