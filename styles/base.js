@@ -1,26 +1,13 @@
-export const products = {
-    color: 'black',
-    fontSize: 16,
-    borderBottomColor: '#F5E2E4',
-    borderBottomWidth: 1,
-    margin: 1,
-    padding: 4,
-};
-
 export const container = {
     flex: 1,
-    // color: '#F5E2E4',
     marginTop: 5,
     borderRadius: 8,
     backgroundColor: "#28282b",
     padding: 8,
-    // color: '#F5F3E7',
 };
 
 export const base = {
     flex: 1,
-    // backgroundColor: '#EEBAB2',
-    // backgroundColor: "#FEFEFE",
     backgroundColor: "black",
     paddingLeft: 12,
     paddingRight: 12,
@@ -41,8 +28,6 @@ export const container3 = {
     flex: 1,
 }
 
-
-
 export const input = {
     fontSize: 20,
     marginBottom: 28,
@@ -55,9 +40,9 @@ export const input = {
 export const button = {
     alignItems:"center",
     justifyContent:"center",
-    paddingVertical:12,
-    paddingHorizontal:32,
-    borderRadius:4,
+    // paddingVertical:12,
+    // paddingHorizontal:32,
+    // borderRadius:4,
     elevation:3,
     color:"white",
     marginHorizontal:"5%",
@@ -72,4 +57,3 @@ export const image = {
 export const containerHome = {
     flex: 1,
 };
-

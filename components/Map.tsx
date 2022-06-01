@@ -3,13 +3,13 @@ import { Text, View, ScrollView, StyleSheet } from "react-native";
 import { Base, Typography } from "../styles";
 import * as Location from 'expo-location';
 
-import Delay from '../interfaces/Delay';
-import Station from '../interfaces/Station';
+// import Delay from '../interfaces/Delay';
+// import Station from '../interfaces/Station';
 
 import MapView from 'react-native-maps';
 import { Circle, Marker } from "react-native-maps";
+import { base } from "../styles/base";
 
-import getCoordinates from "../models/nominatim";
 
 export default function Map({ delays, stations }) {
     const [marker, setMarker] = useState(null);
@@ -43,7 +43,10 @@ export default function Map({ delays, stations }) {
     function drawCircle(advertised, estimated, circleCoordsCenter) {
         const oldTime = new Date(advertised);
         const newTime = new Date(estimated);
-        const metersPerMinute = Math.abs((newTime.getTime() - oldTime.getTime()) / 1000 / 60);
+        const calculatedTime = newTime.getTime() - oldTime.getTime();
+        //console.log(calculatedTime)
+        const delayedTime = Math.floor(calculatedTime / 1000 / 60);
+        //console.log(delayedTime)
 
     setCircleMarker(<Circle
         center={{
@@ -52,15 +55,22 @@ export default function Map({ delays, stations }) {
         }}
         fillColor="#fed42855"
         strokeColor="#fed42855"
-        radius={ metersPerMinute * 45 }
+        radius={ delayedTime * 45 }
         />);
     }
 
-    
-    let list = delays
+    function getCoordinates(coordinates: string) {
+        let myCoordinates = coordinates.split(" ")
+        for (let i = 0; i < myCoordinates.length; i++) {
+            myCoordinates[i] = myCoordinates[i].replace(/[^\d.-]/g, '');
+        }
+        return [myCoordinates[1], myCoordinates[2]]
+    };
+
+    const list = delays
     .filter(delay => delay.hasOwnProperty("FromLocation"))
-    .map((train, index) => {
-        let stationName = stations.filter(station => station.LocationSignature === train.FromLocation[0].LocationName);
+    .map((delayedTrain, index) => {
+        let stationName = stations.filter(station => station.LocationSignature === delayedTrain.FromLocation[0].LocationName);
 
         const results = getCoordinates(stationName[0].Geometry.WGS84);
 
@@ -72,20 +82,22 @@ export default function Map({ delays, stations }) {
         key = {index}
         title={ stationName[0].AdvertisedLocationName }
         pinColor="red"
-        description = { "Avgång: " + train.AdvertisedTimeAtLocation.slice(11,16) +
-            " Ny tid: " + train.EstimatedTimeAtLocation.slice(11,16) }
+        description = { " Tåg: " + delayedTrain.AdvertisedTrainIdent + 
+            " Avgång: " + delayedTrain.AdvertisedTimeAtLocation.slice(11,16) +
+            " Ny tid: " + delayedTrain.EstimatedTimeAtLocation.slice(11,16) }
             onPress={() => 
-                drawCircle(train.AdvertisedTimeAtLocation, train.EstimatedTimeAtLocation, results)}
+                drawCircle(delayedTrain.AdvertisedTimeAtLocation, delayedTrain.EstimatedTimeAtLocation, results)}
         />
         );
     })
 
     return (
-        <View style={styles.container}>
-        <Text style={Typography.header3}>Försenade tåg</Text>
-        <Text style={Typography.normal}>Den blå markern visar din position.</Text>
-        {/* {list} */}
-            {/* <View style={styles.container}>
+        <View style={Base.base}>
+        <Text style={Typography.headerDelays}>Försenade tåg</Text>
+        <Text style={Typography.normalDelays}>Röd marker: försenade tåg. {"\n"}
+        Blå marker: din position. {"\n"}{"\n"}
+        Tryck på en röd marker för att se det område du hinner utforska innan tåget avgår.</Text>
+            <View style={styles.container}>
                 <MapView
                     style={styles.map}
                     initialRegion={{
@@ -95,7 +107,7 @@ export default function Map({ delays, stations }) {
                         longitudeDelta: 10,
                     }}>
                     {list}
-                </MapView> */}
+                </MapView>
                 <MapView
                     style={styles.map}
                     initialRegion={{
@@ -109,6 +121,7 @@ export default function Map({ delays, stations }) {
                     {circleMarker}
                 </MapView>
             </View>
+        </View>
 
     );
 };

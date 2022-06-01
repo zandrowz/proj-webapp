@@ -15,14 +15,6 @@ const trains = {
 
         return result.data;
     },
-
-    // getStations: async function getStations(): Promise<Station[]> {
-    //     const response = await fetch
-    //         (`${config.base_url}/stations`);
-    //     const result = await response.json();
-
-    //     return result.data;
-    // },
 };
 
 export default trains;

@@ -52,11 +52,6 @@ export const header4 = {
     color: 'black',
     fontWeight: "bold",
     marginBottom: 5,
-    // padding: 10,
-};
-export const normal = {
-    fontSize: 20,
-    color: 'white',
 };
 
 export const normalDelays = {
@@ -69,6 +64,12 @@ export const normalAbout = {
     fontSize: 20,
     color: 'white',
     marginTop: 10,
+    textAlign: "center",
+};
+
+export const normal = {
+    fontSize: 20,
+    color: 'white',
 };
 
 export const normal2 = {
@@ -79,7 +80,7 @@ export const normal2 = {
 };
 
 export const text = {
-    color: "white",
+    color: "#dba530",
     fontSize: 30,
     padding: 10,
     fontWeight: "bold",
